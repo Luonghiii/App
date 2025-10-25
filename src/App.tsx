@@ -17,7 +17,6 @@ import {
   ArchiveIcon,
   AppWindowIcon,
   GlobeIcon,
-  FlagVNIcon,
   InfoIcon,
 } from './components/icons';
 
@@ -76,7 +75,7 @@ const translations = {
 
     // AccountListSummary
     accountListTitle: "List of Accounts",
-    activeAccounts: "Active Account",
+    activeAccounts: "Active Accounts",
 
     // AccountCard
     appleAccount: "Apple Account",
@@ -288,6 +287,24 @@ const initialAccounts: Account[] = [
         id: 1,
         email: 'luonghiii@icloud.com',
         password_plain: 'Luong@07',
+        nation: 'Việt Nam',
+        flag: '🇻🇳',
+        lastUpdate: new Date(),
+        status: 'Work',
+    },
+    {
+        id: 2,
+        email: 'luonghii@icloud.com',
+        password_plain: 'Luong@07',
+        nation: 'USA',
+        flag: '🇺🇸',
+        lastUpdate: new Date(),
+        status: 'Work',
+    },
+    {
+        id: 3,
+        email: 'ductien_n@icloud.com',
+        password_plain: 'Truong@81',
         nation: 'Việt Nam',
         flag: '🇻🇳',
         lastUpdate: new Date(),
@@ -580,7 +597,7 @@ const AccountCard: FC<{ account: Account, t: Translation, language: Language, on
 
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-slate-800/50 p-3 rounded-lg flex items-center gap-3">
-            <FlagVNIcon className="w-5 h-5 text-slate-400" />
+            <span className="text-2xl leading-none">{account.flag}</span>
             <div>
                 <p className="text-xs text-slate-400">{t.nation}</p>
                 <p className="text-sm font-semibold text-slate-200">{account.nation}</p>
@@ -900,9 +917,17 @@ const App: FC = () => {
   }, [currentTime, language]);
 
   const totalActiveAccounts = accountList.length;
-  const nationStats = [
-    { flag: '🇻🇳', count: accountList.length },
-  ];
+  const nationStats = useMemo(() => {
+    const stats: Record<string, { flag: string; count: number }> = {};
+    for (const account of accountList) {
+      if (!stats[account.flag]) {
+        stats[account.flag] = { flag: account.flag, count: 0 };
+      }
+      stats[account.flag].count++;
+    }
+    return Object.values(stats).sort((a, b) => b.count - a.count);
+  }, [accountList]);
+
 
   if (isLoading) {
     return <LoadingScreen />;
