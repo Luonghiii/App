@@ -88,6 +88,7 @@ const translations = {
     // Direct Download Card
     directDownloadTitle: "Direct App Downloads",
     directDownloadNote: "Note: These installation links only work on iPhone/iPad.",
+    deleteOldAppNote: "Important: Before installing, please delete the old version of the app from your device.",
     install: "Install",
     shadowrocket: "App Shadowrocket",
     locket: "App Locket",
@@ -209,6 +210,7 @@ const translations = {
     // Direct Download Card
     directDownloadTitle: "Tải Ứng Dụng Trực Tiếp",
     directDownloadNote: "Lưu ý: Các liên kết cài đặt này chỉ hoạt động trên iPhone/iPad.",
+    deleteOldAppNote: "Quan trọng: Trước khi cài đặt, vui lòng xoá phiên bản cũ của ứng dụng khỏi thiết bị.",
     install: "Cài đặt",
     shadowrocket: "App Shadowrocket",
     locket: "App Locket",
@@ -368,13 +370,12 @@ const Header: FC<{t: Translation}> = ({t}) => (
     </header>
 );
 
-const LoginGuide: FC<{t: Translation}> = ({t}) => {
+const LoginGuide: FC<{t: Translation; language: Language}> = ({t, language}) => {
     return (
         <div className="space-y-6">
             <header className="flex flex-col items-center text-center space-y-4">
-                <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                    <div className="absolute inset-0 bg-white/10 rounded-3xl backdrop-blur-sm"></div>
-                    <AppStoreIcon className="w-12 h-12 text-white" />
+                <div className="relative w-20 h-20 rounded-3xl shadow-lg shadow-blue-500/30">
+                    <img src="https://i.ibb.co/Y7d5zS6k/IMG-8541.jpg" alt="Login Guide Icon" className="w-full h-full rounded-3xl object-cover" />
                 </div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">{t.loginGuideTitle}</h2>
                 <p className="text-slate-400">{t.loginGuideSubtitle}</p>
@@ -412,9 +413,9 @@ const LoginGuide: FC<{t: Translation}> = ({t}) => {
                          <div className="space-y-3">
                             <div className="flex items-center gap-2 text-sm text-slate-300">
                                 <span>{t.step1_1}</span>
-                                <AppStoreIcon className="w-5 h-5 text-blue-400" />
+                                <img src="https://i.ibb.co/mCGLzdCP/IMG-8818.jpg" alt="App Store" className="w-5 h-5 rounded-md" />
                                 <span className="font-semibold">{t.step1_2}</span>
-                                <span>lên</span>
+                                {language === 'vi' && <span>lên</span>}
                             </div>
                             <div className="flex items-center gap-2 text-sm text-slate-300">
                                 <ArrowRightIcon className="w-4 h-4 text-purple-400"/>
@@ -597,7 +598,12 @@ const AccountCard: FC<{ account: Account, t: Translation, language: Language, on
   );
 };
 
-const DirectDownloadCard: FC<{ t: Translation }> = ({ t }) => (
+const DirectDownloadCard: FC<{ t: Translation }> = ({ t }) => {
+    const handleInstall = (url: string) => {
+        window.location.href = url;
+    };
+    
+    return (
     <GlowingBorderCard
         className="shadow-cyan-500/30"
         contentClassName="p-6"
@@ -608,29 +614,40 @@ const DirectDownloadCard: FC<{ t: Translation }> = ({ t }) => (
                 <InfoIcon className="w-5 h-5 flex-shrink-0 text-cyan-400" />
                 <span>{t.directDownloadNote}</span>
              </div>
+             <div className="bg-amber-900/50 border border-amber-500/50 p-3 rounded-lg flex items-start gap-2 text-sm text-amber-300">
+                <WarningIcon className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-400" />
+                <span>{t.deleteOldAppNote}</span>
+             </div>
             <div className="bg-slate-800/50 p-4 rounded-lg flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                     <img src="https://i.ibb.co/q322N0H9/IMG-8793.jpg" alt={t.locket} className="w-10 h-10 rounded-lg object-cover" />
                     <p className="font-semibold text-slate-200">{t.locket}</p>
                 </div>
-                <a href="itms-services://?action=download-manifest&url=https://luongdz.vercel.app/Plist/Locket.plist" 
+                <button 
+                   onClick={() => handleInstall("itms-services://?action=download-manifest&url=https://luongdz.vercel.app/Plist/Locket.plist")}
+                   onContextMenu={(e) => e.preventDefault()}
+                   style={{ WebkitTouchCallout: 'none', userSelect: 'none' } as React.CSSProperties}
                    className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 rounded-lg text-white font-semibold transition-colors text-sm">
                     {t.install}
-                </a>
+                </button>
             </div>
             <div className="bg-slate-800/50 p-4 rounded-lg flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                     <img src="https://i.ibb.co/dsq5Q1W3/IMG-8789.png" alt={t.shadowrocket} className="w-10 h-10 rounded-lg object-cover" />
                     <p className="font-semibold text-slate-200">{t.shadowrocket}</p>
                 </div>
-                <a href="itms-services://?action=download-manifest&url=https://luongdz.vercel.app/Plist/Shadowrocket.plist" 
+                <button 
+                   onClick={() => handleInstall("itms-services://?action=download-manifest&url=https://luongdz.vercel.app/Plist/Shadowrocket.plist")}
+                   onContextMenu={(e) => e.preventDefault()}
+                   style={{ WebkitTouchCallout: 'none', userSelect: 'none' } as React.CSSProperties}
                    className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 rounded-lg text-white font-semibold transition-colors text-sm">
                     {t.install}
-                </a>
+                </button>
             </div>
         </div>
     </GlowingBorderCard>
-);
+    );
+};
 
 const LuonghiiiCard: FC<{t: Translation}> = ({t}) => (
     <GlowingBorderCard
@@ -776,7 +793,7 @@ const InstructionModal: FC<{ isOpen: boolean; onClose: () => void; t: Translatio
             <div className="bg-[#161b22] border border-slate-700 rounded-2xl shadow-lg w-full max-w-md max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
                 <main ref={contentRef} onScroll={checkScrollPosition} className="p-1 md:p-2 overflow-y-auto">
                    <div className="p-4 md:p-6">
-                    <LoginGuide t={t} />
+                    <LoginGuide t={t} language={language} />
                    </div>
                 </main>
                 <footer className="p-4 border-t border-slate-700 flex justify-between items-center flex-shrink-0">
